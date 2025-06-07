@@ -1,9 +1,14 @@
 // server.js
 const express = require('express');
 const http = require('http');
+const bodyParser = require("body-parser");
 const socketIo = require('socket.io');
+const cors = require("cors");
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors({ origin: `${process.env.CORS}` }));
 const server = http.createServer(app);
 const io = socketIo(server, {
     cors: {
@@ -92,6 +97,10 @@ function cleanupRoom(roomId) {
 function generateRoomId() {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
+
+app.get('/', (req, res)=>{
+    res.send("Server working fine!")
+})
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
